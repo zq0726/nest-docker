@@ -1,8 +1,9 @@
 # 开发阶段
 FROM node:23-alpine  as build-stage
-
+# 设置工作目录
 WORKDIR /app
 COPY package.json .
+
 RUN npm config set registry https://registry.npmmirror.com/
 RUN npm install --legacy-peer-deps
 COPY . .

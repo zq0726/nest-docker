@@ -18,7 +18,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prepare": "husky"
+    "prepare": "husky",
+    "prod": "pm2 start && pm2 logs",
+    "pm2:delete": "pm2 delete all",
+    "pm2:stop": "pm2 stop all",
+    "pm2:restart": "pm2 restart all"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -80,7 +84,7 @@
     "testEnvironment": "node"
   },
   "lint-staged": {
-    "*.{js,ts}": [
+    "*.{ts}": [
       "eslint --fix",
       "prettier --write"
     ]
