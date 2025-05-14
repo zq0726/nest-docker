@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json .
 
 RUN npm config set registry https://registry.npmmirror.com/
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
 
@@ -24,7 +24,7 @@ RUN mkdir -p /app/log && chown -R node:node /app/log
 ENV NODE_ENV production
 
 RUN npm config set registry https://registry.npmmirror.com/
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps  --omit=dev
 
 EXPOSE 3000
 
