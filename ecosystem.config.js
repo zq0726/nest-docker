@@ -1,14 +1,19 @@
 module.exports = {
   apps: [
     {
-      name: 'nest_docker',
+      name: 'nest-docker',
       script: 'dist/main.js',
-      autorestart: true, //是否自动重启
-      instances: 2, //要启动实例的数量即负载数量
+      instances: 2,
+      autorestart: true,
+      watch: false, // 生产环境关闭文件监控
+      max_memory_restart: '1G',
       error_file: '/app/log/nest-error.log',
       out_file: '/app/log/nest-out.log',
-      log_file: '/app/log/nest-combined.log',
-      merge_logs: false, // 关键：禁用日志合并
+      merge_logs: false,
+      log_date_format: 'YYYY-MM-DD HH:mm Z',
+      env: {
+        NODE_ENV: 'production',
+      },
     },
   ],
 };

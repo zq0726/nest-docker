@@ -9,10 +9,17 @@ services:
       - .env.prod
     ports:
       - "3000:3000"
+    environment:
+      - TZ=Asia/Shanghai  # 设置时区
     networks:
       - common-network
     volumes:
       - ./logs:/app/log
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
   common-network:
