@@ -28,7 +28,7 @@ RUN npm install --legacy-peer-deps  --omit=dev
 
 EXPOSE 3000
 
-CMD ["pm2-runtime", "start", "ecosystem.config.js", "--env", "production"]
+CMD ["npm", "run","prod"]
 USER node
 
 RUN ls -la /app/dist
