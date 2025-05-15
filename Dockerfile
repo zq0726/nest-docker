@@ -19,7 +19,6 @@ COPY --from=build-stage /app/ecosystem.config.js /app/ecosystem.config.js
 
 WORKDIR /app
 
-RUN mkdir -p /app/log && chown -R node:node /app/log && chmod -R 755 /app/log
 # 环境变量
 ENV NODE_ENV production
 

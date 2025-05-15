@@ -13,9 +13,6 @@ services:
       - TZ=Asia/Shanghai  # 设置时区
     networks:
       - common-network
-    volumes:
-      - ./logs:/app/log
-    user: "1000:1000"
     logging:
       driver: "json-file"
       options:
