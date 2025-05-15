@@ -14,6 +14,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
       },
+      uid: 'node', // 明确指定运行用户
     },
   ],
 };
