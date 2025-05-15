@@ -19,8 +19,9 @@ jobs:
           script: |
             set -e # 如果任何命令失败，立即退出
             cd ~/nest-docker # 进入项目目录
-            git fetch origin master:master
+            git fetch origin master
             git reset --hard origin/master
             git clean -fd
+            echo "最新提交哈希: $(git rev-parse HEAD)"  # 输出代码版本
             sudo docker compose down --rmi all # 停止并删除所有容器
             sudo docker compose --env-file .env.prod up -d  # 构建并启动容器
