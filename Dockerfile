@@ -17,9 +17,6 @@ COPY --from=build-stage /app/package.json /app/package.json
 COPY --from=build-stage /app/.env.prod /app/.env.prod
 COPY --from=build-stage /app/ecosystem.config.js /app/ecosystem.config.js
 
-RUN adduser -S node && addgroup -S node
-USER node
-
 WORKDIR /app
 
 RUN mkdir -p /app/log && chown -R node:node /app/log && chmod -R 777 /app/log
@@ -32,5 +29,6 @@ RUN npm install --legacy-peer-deps  --omit=dev
 EXPOSE 3000
 
 CMD ["pm2-runtime", "start", "ecosystem.config.js", "--env", "production"]
+USER node
 
 RUN ls -la /app/dist
