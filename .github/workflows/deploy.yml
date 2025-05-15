@@ -19,4 +19,6 @@ jobs:
           script: |
             set -e # 如果任何命令失败，立即退出
             cd ~/nest-docker # 进入项目目录
+            git pull # 拉取最新代码
             sudo docker compose down --rmi all # 停止并删除所有容器
+            sudo docker compose --env-file .env.prod up -d  # 构建并启动容器
