@@ -24,11 +24,23 @@ services:
   redis-container:
     image: redis
     volumes:
-      - /home/admin/redis-data:/data
+      - ${RD_DATA}:/data
     networks:
       - common-network
     ports:
-      - 6379:6379
+      - 6379:${RD_PORT}
+
+  mysql-container:
+    image: mysql
+    volumes:
+      - ${MYSQL_DATA_PATH}:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWD}
+    networks:
+      - common-network
+    ports:
+      - 3307:${DB_PORT} # 显式映射 MySQL 端口
 
 networks:
   common-network:
