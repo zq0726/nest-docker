@@ -23,6 +23,8 @@ services:
 
   redis-container:
     image: redis
+    env_file:
+      - .env.prod
     volumes:
       - ${RD_DATA}:/data
     networks:
@@ -32,6 +34,8 @@ services:
 
   mysql-container:
     image: mysql
+    env_file:
+      - .env.prod
     volumes:
       - ${MYSQL_DATA_PATH}:/var/lib/mysql
     environment:
