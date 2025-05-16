@@ -24,7 +24,7 @@ services:
   redis-container:
     image: redis
     volumes:
-      - ~/data:/data
+      - /home/admin/redis-data:/data
     networks:
       - common-network
     ports:
