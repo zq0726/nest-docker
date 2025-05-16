@@ -28,7 +28,7 @@ services:
     networks:
       - common-network
     ports:
-      - 6379:${RD_PORT}
+      - 6379:6379
 
 networks:
   common-network:
