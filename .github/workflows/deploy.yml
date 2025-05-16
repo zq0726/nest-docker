@@ -22,6 +22,19 @@ jobs:
             git fetch origin master
             git reset --hard origin/master
             git clean -fd
+
+            # 确保 .env.prod 存在（从 Git 拉取）
+            if [ ! -f .env.prod ]; then
+              echo "Error: .env.prod not found!"
+              exit 1
+            fi
+
+            # 验证环境变量内容
+            echo "--- .env.prod 内容 ---"
+            cat .env.prod
+            echo "----------------------"
+
+
             echo "最新提交哈希: $(git rev-parse HEAD)"  # 输出代码版本
-            sudo docker compose down --rmi all # 停止并删除所有容器
+            sudo docker compose --env-file .env.prod down --rmi all # 停止并删除所有容器
             sudo docker compose --env-file .env.prod up -d  # 构建并启动容器
