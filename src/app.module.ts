@@ -13,7 +13,7 @@ const isProd = process.env.NODE_ENV == 'production';
   imports: [
     ConfigModule.forRoot({
       envFilePath: [
-        isProd ? path.join(cwd(), '.env') : path.join(cwd(), '.env.prod'),
+        isProd ? path.join(cwd(), '.env.prod') : path.join(cwd(), '.env'),
       ],
       isGlobal: true,
     }),
