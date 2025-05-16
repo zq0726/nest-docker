@@ -5,14 +5,20 @@ import { ConfigModule } from '@nestjs/config';
 import * as path from 'path';
 import { cwd } from 'process';
 import { UserModule } from './modules/user/user.module';
+import { CacheModule } from './cache/cache.module';
+
+const isProd = process.env.NODE_ENV == 'production';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: path.join(cwd(), '.env'),
+      envFilePath: [
+        isProd ? path.join(cwd(), '.env') : path.join(cwd(), '.env.prod'),
+      ],
       isGlobal: true,
     }),
     UserModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -5,6 +5,8 @@ services:
     build:
       context: ./
       dockerfile: ./Dockerfile
+    depends_on:
+      - redis-container
     env_file:
       - .env.prod
     ports:
@@ -18,6 +20,15 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  redis-container:
+    image: redis
+    volumes:
+      - ~/data:/data
+    networks:
+      - common-network
+    ports:
+      -6379:${RD_PORT}
 
 networks:
   common-network:
