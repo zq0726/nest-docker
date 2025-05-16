@@ -22,5 +22,6 @@ import { ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     },
   ],
+  exports: [CacheService],
 })
 export class CacheModule {}
