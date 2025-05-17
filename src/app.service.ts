@@ -5,7 +5,7 @@ import { CacheService } from './cache/cache.service';
 export class AppService {
   constructor(@Inject() private cacheService: CacheService) {}
   getHello(): string {
-    return '  Hello World! && cg  mysql  gg  test';
+    return '  Hello World! && cg  mysql  gg  mysql';
   }
 
   setCache(key: string, value: unknown, second: number = 1000): any {
