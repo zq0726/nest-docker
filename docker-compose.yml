@@ -43,6 +43,8 @@ services:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWD}
       MYSQL_BIND_ADDRESS: 0.0.0.0  # 新增此行
+      TZ: Asia/Shanghai  # 同步宿主机时区
+
     networks:
       - common-network
     ports:
