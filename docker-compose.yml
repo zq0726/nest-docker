@@ -42,10 +42,20 @@ services:
     environment:
       MYSQL_DATABASE: ${DB_DATABASE}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWD}
+      MYSQL_BIND_ADDRESS: 0.0.0.0  # 新增此行
     networks:
       - common-network
     ports:
       - 3307:${DB_PORT} # 显式映射 MySQL 端口
+    depends_on:
+      - mysql-init
+
+  mysql-init:
+    image: busybox
+    volumes:
+      - ${MYSQL_DATA_PATH}:/var/lib/mysql
+    command: sh -c "chown -R 999:999 /var/lib/mysql"
+    # 初始化服务无需暴露端口或网络
 
 networks:
   common-network:
