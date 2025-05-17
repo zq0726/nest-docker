@@ -34,7 +34,7 @@ services:
       - 6379:${RD_PORT}
 
   mysql-container:
-    image: mysql
+    image: mysql:8.0.39
     env_file:
       - .env.prod
     volumes:
