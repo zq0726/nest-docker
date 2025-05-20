@@ -6,16 +6,22 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('docker_user')
+@Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', comment: '账号' })
-  firstName: string;
+  account: string;
 
   @Column({ type: 'varchar', comment: '密码' })
-  lastName: string;
+  password: string;
+
+  @Column({ type: 'varchar', comment: '真实名字', default: '' })
+  username: string;
+
+  @Column({ type: 'varchar', comment: '手机号', default: '' })
+  phone: string;
 
   @Column({ default: true })
   isActive: boolean;

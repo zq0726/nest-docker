@@ -1,8 +1,14 @@
-import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
-  name: string;
+  account: string;
 
   @IsString()
   @MinLength(6)
@@ -12,4 +18,12 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   realName?: string;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsBoolean({})
+  isActive?: boolean;
 }

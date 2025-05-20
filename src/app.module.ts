@@ -22,9 +22,6 @@ const isProd = process.env.NODE_ENV == 'production';
     CacheModule,
     TypeOrmModule.forRootAsync({
       useFactory(configService: ConfigService) {
-        console.log('configService', configService.get('DB_HOST'));
-        console.log('configService', configService.get('DB_PORT'));
-        console.log('configService', configService.get('DB_DATABASE'));
         return {
           type: 'mysql',
           host: configService.get('DB_HOST'),
