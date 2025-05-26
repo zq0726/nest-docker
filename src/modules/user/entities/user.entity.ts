@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('user')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -20,11 +20,20 @@ export class User {
   @Column({ type: 'varchar', comment: '密码', select: false })
   password: string;
 
-  @Column({ type: 'varchar', comment: '真实名字', default: '' })
+  @Column({ type: 'varchar', comment: '昵称', default: '' })
   username: string;
 
   @Column({ type: 'varchar', comment: '手机号', default: '' })
   phone: string;
+
+  @Column({ nullable: true })
+  avatar: string; //头像
+
+  @Column({ nullable: true })
+  email: string; //邮箱
+
+  @Column({ nullable: true })
+  role: string; //角色
 
   @Column({ default: true })
   isActive: boolean;

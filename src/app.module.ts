@@ -7,6 +7,7 @@ import { cwd } from 'process';
 import { UserModule } from './modules/user/user.module';
 import { CacheModule } from './cache/cache.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
 
 const isProd = process.env.NODE_ENV == 'production';
 
@@ -30,11 +31,24 @@ const isProd = process.env.NODE_ENV == 'production';
           password: configService.get('DB_PASSWD'), // 密码
           database: configService.get('DB_DATABASE'), //数据库名
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: !isProd, // 生产环境不自动同步
+          // synchronize: !isProd, // 生产环境不自动同步
           connectorPackage: 'mysql2', //驱动包
         };
       },
       inject: [ConfigService],
+    }),
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          secret: configService.get<string>('JWT_SECRET'),
+          signOptions: {
+            expiresIn: configService.get<string>('JWT_EXP'),
+          },
+        };
+      },
     }),
   ],
   controllers: [AppController],

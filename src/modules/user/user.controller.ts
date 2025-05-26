@@ -6,15 +6,23 @@ import {
   Patch,
   Param,
   Delete,
-  UseInterceptors,
-  ClassSerializerInterceptor,
+  Query,
+  // UseInterceptors,
+  // ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CreateUserVo } from './vo/create-user.vo';
+import { LoginDto } from './dto/login-dto';
+import { LoginVo } from './vo/login.vo';
+import { Public } from '@/common/decorator/public/public.decorator';
+import { Captcha } from './interfance/login';
 
+@ApiTags('用户模块')
 @Controller('user')
-@UseInterceptors(ClassSerializerInterceptor) // 控制器级别应用
+// @UseInterceptors(ClassSerializerInterceptor) // 控制器级别应用
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -23,7 +31,9 @@ export class UserController {
    * @param createUserDto
    * @returns
    */
+  @ApiOperation({ summary: '添加用户' })
   @Post()
+  @ApiOkResponse({ example: '请求成功', type: CreateUserVo })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -32,6 +42,7 @@ export class UserController {
    * 获取所有用户
    * @returns
    */
+  @ApiOperation({ summary: '获取用户' })
   @Get()
   findAll() {
     return this.userService.findAll();
@@ -42,8 +53,9 @@ export class UserController {
    * @param id
    * @returns
    */
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @ApiOperation({ summary: '通过id获取用户' })
+  @Get('/byId')
+  findOne(@Query('id') id: string) {
     return this.userService.findOne(+id);
   }
 
@@ -66,5 +78,19 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Public()
+  @ApiOperation({ summary: '登录' })
+  @ApiOkResponse({ example: '登录成功', type: LoginVo })
+  @Post('login')
+  login(@Body() loginDto: LoginDto) {
+    return this.userService.login(loginDto);
+  }
+
+  @Public()
+  @Get('captcha')
+  getCaptcha(): Promise<Captcha> {
+    return this.userService.getCaptcha();
   }
 }

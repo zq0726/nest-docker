@@ -43,7 +43,7 @@ export class CacheService {
     return await this.redisClient.set(key, value, {
       expiration: {
         type: 'EX',
-        value: second || 1000,
+        value: second || 60 * 5, //默认五分钟
       },
     });
   }

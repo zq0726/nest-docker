@@ -1,5 +1,13 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  // HttpException,
+  // HttpStatus,
+  Query,
+} from '@nestjs/common';
 import { AppService } from './app.service';
+// import { ApiException } from './common/filter/http-exception/api.exception';
+// import { ApiErrorCode } from './common/enums/api-error-code.enum';
 
 @Controller()
 export class AppController {
@@ -7,6 +15,8 @@ export class AppController {
 
   @Get()
   getHello(): string {
+    // throw new ApiException('用户id无效', ApiErrorCode.USER_NOT_EXIST);
+    // throw new HttpException('您有问题', HttpStatus.FORBIDDEN);
     return this.appService.getHello();
   }
 
