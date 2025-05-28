@@ -25,13 +25,25 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
     }
 
+    console.log('errResponse6666', errResponse);
+
     return response.status(status).json({
       code: status,
       timestamp: new Date().toISOString(),
       path: request.url,
-      message: errResponse.message[0]
-        ? errResponse.message[0]
-        : exception.message,
+      message:
+        typeof errResponse === 'string'
+          ? errResponse
+          : (errResponse?.message && Array.isArray(errResponse.message)
+              ? errResponse.message[0]
+              : errResponse.message) ||
+            exception.message ||
+            'Internal Server Error',
+      // message: errResponse?.message[0]
+      //   ? errResponse?.message[0]
+      //   : exception?.message
+      //     ? exception?.message
+      //     : errResponse,
     });
   }
 }

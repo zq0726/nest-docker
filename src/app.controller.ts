@@ -6,9 +6,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
+import { Public } from './common/decorator/public/public.decorator';
 // import { ApiException } from './common/filter/http-exception/api.exception';
 // import { ApiErrorCode } from './common/enums/api-error-code.enum';
 
+@Public()
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
