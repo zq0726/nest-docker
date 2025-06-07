@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { decrypt, encrypt } from '@/utils/bcrypt';
 import { ApiException } from '@/common/filter/http-exception/api.exception';
 import { ApiErrorCode } from '@/common/enums/api-error-code.enum';
@@ -11,6 +11,7 @@ import { LoginDto } from './dto/login-dto';
 import { JwtService } from '@nestjs/jwt';
 import { generateCaptcha } from '@/utils/generateCaptcha';
 import { CacheService } from '@/cache/cache.service';
+import { PaginationQueryDto } from './dto/pagination.dto';
 
 @Injectable()
 export class UserService {
@@ -19,9 +20,14 @@ export class UserService {
     private jwtService: JwtService,
     private cacheService: CacheService,
   ) {}
-  async create(createUserDto: CreateUserDto) {
-    console.log('createUserDto', createUserDto);
-    const { account, password } = createUserDto;
+
+  /**
+   * 创建用户
+   * @param createUserDto
+   * @returns
+   */
+  async create(createUserDto: CreateUserDto, createBy: string) {
+    const { account, password, phone } = createUserDto;
     const existUser = await this.userRepository.findOneBy({
       account,
     });
@@ -30,18 +36,60 @@ export class UserService {
       throw new ApiException('用户已存在', ApiErrorCode.USER_EXIST);
     }
 
+    if (phone) {
+      const existPhone = await this.userRepository.findOneBy({
+        phone,
+      });
+
+      if (existPhone) {
+        throw new ApiException('手机号已存在', ApiErrorCode.USER_PHONE_EXIST);
+      }
+    }
+
     const savePwd = encrypt(password);
-    const saveInfo = { ...createUserDto, password: savePwd };
+    const saveInfo = {
+      ...createUserDto,
+      password: savePwd,
+      createBy,
+    };
     await this.userRepository.save(saveInfo);
 
-    return {
-      code: 200,
-      message: '添加成功',
-    };
+    return '添加成功';
   }
 
-  async findAll() {
-    return await this.userRepository.find();
+  /**
+   * 分页获取用户信息
+   * @returns
+   */
+  async findAll(paginationQuery: PaginationQueryDto) {
+    console.log('paginationQuery', paginationQuery);
+    const {
+      page = 1,
+      pageSize = 10,
+      sortBy = 'createAt',
+      sortOrder = 'DESC',
+    } = paginationQuery;
+
+    const queryBuilder: SelectQueryBuilder<User> =
+      this.userRepository.createQueryBuilder('user');
+
+    if (sortBy) {
+      queryBuilder.orderBy(`user.${sortBy}`, sortOrder);
+    }
+
+    const [data, total] = await queryBuilder
+      .take(pageSize)
+      .skip((page - 1) * pageSize)
+      .getManyAndCount();
+
+    const totalPages = Math.ceil(total / pageSize);
+    return {
+      data,
+      total,
+      page,
+      pageSize,
+      totalPages,
+    };
   }
 
   async findOne(id: number) {

@@ -40,6 +40,7 @@ export class CreateUserDto {
   email?: string;
 
   @ApiProperty({ example: '', description: '角色' })
+  @IsOptional()
   role?: string;
 
   @ApiProperty({ example: true, description: '是否使用' })

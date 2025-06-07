@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  Request,
   // UseInterceptors,
   // ClassSerializerInterceptor,
 } from '@nestjs/common';
@@ -19,6 +20,9 @@ import { LoginDto } from './dto/login-dto';
 import { LoginVo } from './vo/login.vo';
 import { Public } from '@/common/decorator/public/public.decorator';
 import { Captcha } from './interfance/login';
+import { PaginationQueryDto } from './dto/pagination.dto';
+import { User } from './entities/user.entity';
+import { PaginationResult } from '@/type/common';
 
 @ApiTags('用户模块')
 @Controller('user')
@@ -34,8 +38,8 @@ export class UserController {
   @ApiOperation({ summary: '添加用户' })
   @Post()
   @ApiOkResponse({ example: '请求成功', type: CreateUserVo })
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserDto, @Request() request) {
+    return this.userService.create(createUserDto, request.user.account);
   }
 
   /**
@@ -44,8 +48,13 @@ export class UserController {
    */
   @ApiOperation({ summary: '获取用户' })
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(
+    @Query() paginationQuery: PaginationQueryDto,
+    @Request() request,
+  ): Promise<PaginationResult<User>> {
+    console.log('request', request.user.account);
+
+    return this.userService.findAll(paginationQuery);
   }
 
   /**

@@ -22,7 +22,7 @@ export class TransformInterceptor<T>
     return next
       .handle()
       .pipe(
-        map((data) => ({ code: 200, data: data as T, describe: '请求成功' })),
+        map((data) => ({ code: 200, data: data as T, message: '请求成功' })),
       );
   }
 }

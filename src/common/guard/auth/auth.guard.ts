@@ -44,7 +44,7 @@ export class AuthGuard implements CanActivate {
       });
       request['user'] = payload; // 将解析后的用户信息存储在请求对象中
     } catch {
-      throw new HttpException('token验证失败', HttpStatus.FORBIDDEN); // token验证失败，抛出异常
+      throw new HttpException('token验证失败', HttpStatus.UNAUTHORIZED); // token验证失败，抛出异常
     }
 
     return true; // 身份验证通过

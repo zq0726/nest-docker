@@ -16,8 +16,8 @@ export class User {
   @Column({ type: 'varchar', comment: '账号' })
   account: string;
 
-  @Exclude({ toPlainOnly: true }) // 序列化时自动排除
-  @Column({ type: 'varchar', comment: '密码', select: false })
+  // @Exclude({ toPlainOnly: true }) // 序列化时自动排除
+  @Column({ type: 'varchar', comment: '密码' })
   password: string;
 
   @Column({ type: 'varchar', comment: '昵称', default: '' })
@@ -37,6 +37,9 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ default: '', comment: '创建人' })
+  createBy: string;
 
   @CreateDateColumn({
     transformer: {
