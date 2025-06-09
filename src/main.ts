@@ -8,9 +8,9 @@ import { TransformInterceptor } from './common/interceptor/transform/transform.i
 import { useContainer } from 'class-validator';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
-import * as ip from 'ip';
+// import * as ip from 'ip';
 
-const isProd = process.env.NODE_ENV == 'production';
+// const isProd = process.env.NODE_ENV == 'production';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -37,18 +37,24 @@ async function bootstrap() {
   const port = process.env.APP_PORT || 3000;
   await app.listen(port);
 
-  if (isProd) {
-    console.log(
-      pc.yellow(
-        `\n 服务器运行在：http://localhost:${port}${process.env.APP_PREFIX} 上`,
-      ),
-    );
-  } else {
-    console.log(
-      pc.yellow(
-        `\n 服务器运行在：http://${ip.address()}:${port}${process.env.APP_PREFIX} 上`,
-      ),
-    );
-  }
+  console.log(
+    pc.yellow(
+      `\n 服务器运行在：http://localhost:${port}${process.env.APP_PREFIX} 上`,
+    ),
+  );
+
+  // if (isProd) {
+  //   console.log(
+  //     pc.yellow(
+  //       `\n 服务器运行在：http://localhost:${port}${process.env.APP_PREFIX} 上`,
+  //     ),
+  //   );
+  // } else {
+  //   console.log(
+  //     pc.yellow(
+  //       `\n 服务器运行在：http://${ip.address()}:${port}${process.env.APP_PREFIX} 上`,
+  //     ),
+  //   );
+  // }
 }
 bootstrap();
