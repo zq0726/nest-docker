@@ -35,6 +35,7 @@ export class UserController {
    * @param createUserDto
    * @returns
    */
+  @Public()
   @ApiOperation({ summary: '添加用户' })
   @Post()
   @ApiOkResponse({ example: '请求成功', type: CreateUserVo })
