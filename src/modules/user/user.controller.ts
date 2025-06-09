@@ -43,7 +43,7 @@ export class UserController {
     console.log('请求参数', createUserDto);
     return this.userService.create(
       createUserDto,
-      request.user.account ?? 'admin',
+      request?.user?.account ?? 'admin',
     );
   }
 
