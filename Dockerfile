@@ -19,6 +19,8 @@ COPY --from=build-stage /app/ecosystem.config.js /app/ecosystem.config.js
 
 WORKDIR /app
 
+RUN mkdir -p /app/uploads && chown -R node:node /app/uploads
+
 # 环境变量
 ENV NODE_ENV production
 
