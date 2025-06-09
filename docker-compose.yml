@@ -64,3 +64,6 @@ services:
 networks:
   common-network:
     driver: bridge
+
+volumes:
+  uploads:
