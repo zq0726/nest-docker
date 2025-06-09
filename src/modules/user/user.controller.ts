@@ -40,7 +40,11 @@ export class UserController {
   @Post()
   @ApiOkResponse({ example: '请求成功', type: CreateUserVo })
   create(@Body() createUserDto: CreateUserDto, @Request() request) {
-    return this.userService.create(createUserDto, request.user.account);
+    console.log('请求参数', createUserDto);
+    return this.userService.create(
+      createUserDto,
+      request.user.account ?? 'admin',
+    );
   }
 
   /**
