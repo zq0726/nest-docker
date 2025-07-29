@@ -7,4 +7,9 @@ export enum ApiErrorCode {
   CAPTCHA_ERROR = 10004, //验证码错误
   CAPTCHA_EXPIRE = 10005, //验证码过期
   COMMON_CODE = 20000, //通用错误码,想偷懒就返回这个
+
+  ROLE_CODE_EXIST = 10101, //角色已存在
+  ROLE_NAME_EXIST = 10102, //角色名称已存在
+
+  MENU_PATH_EXIST = 10201, //路由已存在
 }

@@ -5,9 +5,9 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
   Query,
   Request,
+  Delete,
   // UseInterceptors,
   // ClassSerializerInterceptor,
 } from '@nestjs/common';
@@ -21,12 +21,10 @@ import { LoginVo } from './vo/login.vo';
 import { Public } from '@/common/decorator/public/public.decorator';
 import { Captcha } from './interfance/login';
 import { PaginationQueryDto } from './dto/pagination.dto';
-import { User } from './entities/user.entity';
 import { PaginationResult } from '@/type/common';
 
 @ApiTags('用户模块')
 @Controller('user')
-// @UseInterceptors(ClassSerializerInterceptor) // 控制器级别应用
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -35,12 +33,10 @@ export class UserController {
    * @param createUserDto
    * @returns
    */
-  @Public()
   @ApiOperation({ summary: '添加用户' })
   @Post()
   @ApiOkResponse({ example: '请求成功', type: CreateUserVo })
   create(@Body() createUserDto: CreateUserDto, @Request() request) {
-    console.log('请求参数', createUserDto);
     return this.userService.create(
       createUserDto,
       request?.user?.account ?? 'admin',
@@ -56,10 +52,11 @@ export class UserController {
   findAll(
     @Query() paginationQuery: PaginationQueryDto,
     @Request() request,
-  ): Promise<PaginationResult<User>> {
-    console.log('request', request.user.account);
-
-    return this.userService.findAll(paginationQuery);
+  ): Promise<PaginationResult<any>> {
+    return this.userService.findAll(
+      paginationQuery,
+      request?.user?.account ?? 'admin',
+    );
   }
 
   /**
@@ -89,9 +86,23 @@ export class UserController {
    * @param id
    * @returns
    */
-  @Get('/delete')
-  remove(@Query('id') id: string) {
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  /**
+   * 通过角色id 获取用户
+   */
+  @Get('/role')
+  roleUser(@Query('id') id: string) {
+    return this.userService.roleUser(id);
+  }
+
+  @Get('/all')
+  userAll() {
+    return this.userService.userAll();
   }
 
   @Public()

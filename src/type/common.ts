@@ -1,14 +1,14 @@
 export interface PaginationMeta {
   page: number;
   total: number;
-  pageSize: number;
+  size: number;
 }
 
 // 分页数据
 export interface PaginationMeta {
   total: number;
   page: number;
-  pageSize: number;
+  size: number;
   totalPages: number;
 }
 

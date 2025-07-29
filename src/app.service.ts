@@ -9,6 +9,7 @@ export class AppService {
   }
 
   setCache(key: string, value: unknown, second: number = 1000): any {
+    console.log(key, value, second);
     return this.cacheService.set(key, value, second);
   }
 

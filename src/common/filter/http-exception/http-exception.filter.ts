@@ -16,6 +16,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus();
     const errResponse: any = exception.getResponse();
 
+    console.log('有问题了');
+
     if (exception instanceof ApiException) {
       return response.status(status).json({
         code: exception.getErrorCode(),

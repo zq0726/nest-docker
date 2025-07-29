@@ -12,6 +12,8 @@ import { JwtService } from '@nestjs/jwt';
 import { generateCaptcha } from '@/utils/generateCaptcha';
 import { CacheService } from '@/cache/cache.service';
 import { PaginationQueryDto } from './dto/pagination.dto';
+import { UploadService } from '../../upload/upload.service';
+import { RoleService } from '../role/role.service';
 
 @Injectable()
 export class UserService {
@@ -19,6 +21,8 @@ export class UserService {
     @InjectRepository(User) private userRepository: Repository<User>,
     private jwtService: JwtService,
     private cacheService: CacheService,
+    private uploadService: UploadService,
+    private roleService: RoleService,
   ) {}
 
   /**
@@ -53,7 +57,6 @@ export class UserService {
       createBy,
     };
     await this.userRepository.save(saveInfo);
-
     return '添加成功';
   }
 
@@ -61,52 +64,109 @@ export class UserService {
    * 分页获取用户信息
    * @returns
    */
-  async findAll(paginationQuery: PaginationQueryDto) {
-    console.log('paginationQuery', paginationQuery);
+  async findAll(paginationQuery: PaginationQueryDto, account?: string) {
     const {
       page = 1,
-      pageSize = 10,
+      size = 10,
       sortBy = 'createAt',
       sortOrder = 'DESC',
+      username,
     } = paginationQuery;
 
     const queryBuilder: SelectQueryBuilder<User> =
       this.userRepository.createQueryBuilder('user');
 
+    // 添加基础排序
     if (sortBy) {
       queryBuilder.orderBy(`user.${sortBy}`, sortOrder);
     }
 
-    const [data, total] = await queryBuilder
-      .take(pageSize)
-      .skip((page - 1) * pageSize)
+    // 非 admin 用户过滤
+    if (account !== 'admin') {
+      queryBuilder.where("user.account != 'admin'");
+    }
+
+    // 模糊查询
+    if (username) {
+      queryBuilder.andWhere('user.username LIKE :username', {
+        username: `%${username}%`,
+      });
+    }
+
+    const [data, total]: any = await queryBuilder
+      .select([
+        'user.id',
+        'user.username',
+        'user.account',
+        'user.phone',
+        'user.avatar',
+        'user.email',
+        'user.role', // 直接返回 roleId（原始值）
+        'user.isActive',
+        'user.createBy',
+        'user.createAt',
+      ])
+      .take(size)
+      .skip((page - 1) * size)
       .getManyAndCount();
 
-    const totalPages = Math.ceil(total / pageSize);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].role) {
+        const roleList = await this.roleService.getRoleById(data[i].role);
+        data[i].roleInfo = roleList;
+      }
+    }
+
+    const totalPages = total > 0 ? Math.ceil(total / size) : 0;
     return {
       data,
       total,
       page,
-      pageSize,
+      size,
       totalPages,
     };
   }
 
+  // 通过id查找某个用户
   async findOne(id: number) {
-    console.log('id', id);
     const res = await this.userRepository.findOne({ where: { id } });
-    console.log('res', res);
     return res;
   }
 
+  // 修改某个用户的数据
   update(id: number, updateUserDto: UpdateUserDto) {
-    console.log('id', id);
-    console.log('updateUserDto', updateUserDto);
-    return `This action updates a #${id} user`;
+    return this.userRepository.update(id, updateUserDto);
   }
 
+  // 删除某个用户
   async remove(id: number) {
-    return await this.userRepository.delete(id);
+    try {
+      const user = await this.findOne(id);
+      if (user) {
+        this.uploadService.deleteFile(user.avatar);
+      }
+
+      return await this.userRepository.delete(id);
+    } catch (error) {
+      console.log('error', error);
+    }
+    // this.uploadService.deleteFile()
+  }
+
+  //通过角色获取用户
+  async roleUser(role: string) {
+    console.log('roleID', role);
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where('FIND_IN_SET(:role,user.role)', { role })
+      .getMany();
+  }
+
+  async userAll() {
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id', 'user.username'])
+      .getMany();
   }
 
   /**
@@ -143,6 +203,7 @@ export class UserService {
 
     const payload = { account, sub: user.id };
     const token = await this.jwtService.signAsync(payload);
+    await this.cacheService.set(token, token, 7200);
     return {
       token,
     };

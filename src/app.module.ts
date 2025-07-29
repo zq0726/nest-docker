@@ -4,11 +4,14 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as path from 'path';
 import { cwd } from 'process';
-import { UserModule } from './modules/user/user.module';
+import { UserModule } from './modules/system/user/user.module';
 import { CacheModule } from './cache/cache.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { UploadModule } from './modules/upload/upload.module';
+import { RoleModule } from './modules/system/role/role.module';
+import { DepartmentModule } from './modules/system/department/department.module';
+import { MenuModule } from './modules/system/menu/menu.module';
 
 const isProd = process.env.NODE_ENV == 'production';
 
@@ -53,6 +56,9 @@ const isProd = process.env.NODE_ENV == 'production';
       },
     }),
     UploadModule,
+    RoleModule,
+    DepartmentModule,
+    MenuModule,
   ],
   controllers: [AppController],
   providers: [AppService],

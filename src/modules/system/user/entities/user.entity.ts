@@ -1,4 +1,4 @@
-import { Exclude } from 'class-transformer';
+import { DateType } from '@/config/constant';
 import * as dayjs from 'dayjs';
 import {
   Column,
@@ -44,7 +44,7 @@ export class User {
   @CreateDateColumn({
     transformer: {
       to: (value) => value,
-      from: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
+      from: (value) => dayjs(value).format(DateType),
     },
   })
   createAt: Date;
@@ -52,7 +52,7 @@ export class User {
   @UpdateDateColumn({
     transformer: {
       to: (value) => value,
-      from: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'),
+      from: (value) => dayjs(value).format(DateType),
     },
   })
   updateAt: Date;

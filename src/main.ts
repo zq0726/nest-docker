@@ -24,13 +24,19 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  app.useStaticAssets(join(process.cwd(), 'src/assets'), {
+
+  if (process.env.NODE_ENV === 'production') {
+    app.useStaticAssets('/app/uploads', {
+      prefix: '/uploads/',
+    });
+  }
+
+  app.useStaticAssets(join(__dirname, './assets'), {
     prefix: '/static/',
   });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   init(app);
-
   const port = process.env.APP_PORT || 3000;
   await app.listen(port);
 
