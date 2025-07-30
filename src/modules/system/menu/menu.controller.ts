@@ -36,6 +36,7 @@ export class MenuController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateMenuDto: UpdateMenuDto) {
+    console.log('修改菜单', id, updateMenuDto);
     return this.menuService.update(+id, updateMenuDto);
   }
 

@@ -36,7 +36,7 @@ export class MenuService {
       page = 1,
       size = 10,
       sortBy = 'order',
-      sortOrder = 'DESC',
+      sortOrder = 'ASC',
     } = paginationQuery;
 
     const [data, total] = await this.menuRepository.findAndCount({
@@ -59,12 +59,11 @@ export class MenuService {
   private async buildMenuTree(menus: Menu[]) {
     const tree: any = [];
     for (const menu of menus) {
-      console.log('menu', menu);
       const info: any = { ...menu };
       const children = await this.menuRepository.find({
         where: { father: menu.id },
         order: {
-          order: 'DESC',
+          order: 'ASC',
         },
       });
 
@@ -87,9 +86,8 @@ export class MenuService {
     return await this.menuRepository.find();
   }
 
-  update(id: number, updateMenuDto: UpdateMenuDto) {
-    console.log('updateMenuDto', updateMenuDto);
-    return `This action updates a #${id} menu`;
+  async update(id: number, updateMenuDto: UpdateMenuDto) {
+    return await this.menuRepository.update(id, updateMenuDto);
   }
 
   remove(id: number) {

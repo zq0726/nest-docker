@@ -29,11 +29,12 @@ async function bootstrap() {
     app.useStaticAssets('/app/uploads', {
       prefix: '/uploads/',
     });
+  } else {
+    app.useStaticAssets(join(__dirname, './assets'), {
+      prefix: '/static/',
+    });
   }
 
-  app.useStaticAssets(join(__dirname, './assets'), {
-    prefix: '/static/',
-  });
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   init(app);
