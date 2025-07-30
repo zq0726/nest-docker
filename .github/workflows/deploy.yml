@@ -15,7 +15,7 @@ jobs:
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_USER }}
           script: |
             set -e # 如果任何命令失败，立即退出
             cd ~/nest-docker # 进入项目目录
